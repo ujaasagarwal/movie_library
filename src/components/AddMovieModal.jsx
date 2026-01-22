@@ -8,8 +8,8 @@ import {
 function dedupeById(items) {
   if (!Array.isArray(items)) return [];
   const map = new Map();
-  items.forEach(i => {
-    if (!map.has(i.id)) map.set(i.id, i);
+  items.forEach(item => {
+    if (!map.has(item.id)) map.set(item.id, item);
   });
   return Array.from(map.values());
 }
@@ -31,7 +31,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
     e.preventDefault();
     if (!query.trim()) return;
 
-    const currentId = ++requestIdRef.current;
+    const requestId = ++requestIdRef.current;
 
     setLoading(true);
     setError("");
@@ -44,11 +44,11 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
     try {
       if (filter === "movie") {
         const data = await searchMovie(query);
-        if (currentId !== requestIdRef.current) return;
+        if (requestId !== requestIdRef.current) return;
         setResults(dedupeById(data?.results || []));
       } else {
         const data = await searchPerson(query);
-        if (currentId !== requestIdRef.current) return;
+        if (requestId !== requestIdRef.current) return;
         setPeople(
           (data?.results || []).filter(p =>
             filter === "actor"
@@ -58,11 +58,11 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
         );
       }
     } catch {
-      if (currentId === requestIdRef.current) {
+      if (requestId === requestIdRef.current) {
         setError("Search failed");
       }
     } finally {
-      if (currentId === requestIdRef.current) {
+      if (requestId === requestIdRef.current) {
         setLoading(false);
         setHasSearched(true);
       }
@@ -70,7 +70,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   }
 
   async function handlePersonSelect(person) {
-    const currentId = ++requestIdRef.current;
+    const requestId = ++requestIdRef.current;
 
     setLoading(true);
     setResults([]);
@@ -81,7 +81,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
 
     try {
       const credits = await getPersonMovies(person.id);
-      if (currentId !== requestIdRef.current) return;
+      if (requestId !== requestIdRef.current) return;
 
       const movies =
         filter === "actor"
@@ -90,11 +90,11 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
 
       setResults(dedupeById(movies));
     } catch {
-      if (currentId === requestIdRef.current) {
+      if (requestId === requestIdRef.current) {
         setError("Failed to load credits");
       }
     } finally {
-      if (currentId === requestIdRef.current) {
+      if (requestId === requestIdRef.current) {
         setLoading(false);
         setHasSearched(true);
       }
@@ -103,23 +103,30 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
 
   function addMovie(movie) {
     if (movies.some(m => m.id === movie.id)) return;
+
     setMovies(prev => [
       ...prev,
-      { ...movie, userRating: 0, userReview: "" }
+      {
+        ...movie,
+        userRating: "",
+        userReview: "",
+        isSaved : false
+      }
     ]);
+
     closeModal();
   }
 
   return (
     <div className="modal">
       <div className="modal-content">
-        <button type="button" onClick={closeModal}>X</button>
+        <button type="button" onClick={closeModal}>✕</button>
 
         <form onSubmit={handleSearch}>
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Search..."
+            placeholder="Search movies, actors, directors..."
           />
 
           <select value={filter} onChange={e => setFilter(e.target.value)}>
@@ -136,67 +143,36 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
         {loading && <p>Loading…</p>}
         {error && <p>{error}</p>}
 
-        {hasSearched &&
-          !loading &&
-          filter === "movie" &&
-          results.length === 0 &&
-          !error && <p>No movies found</p>}
+        {hasSearched && !loading && filter === "movie" && results.length === 0 && !error && (
+          <p>No movies found</p>
+        )}
 
-        {hasSearched &&
-          !loading &&
-          filter !== "movie" &&
-          people.length === 0 &&
-          !error && <p>No people found</p>}
+        {hasSearched && !loading && filter !== "movie" && people.length === 0 && !error && (
+          <p>No people found</p>
+        )}
 
-        {!selectedPerson && people.map(p => (
-          <div key={p.id} className="result">
-            <div
-              style={{ display: "flex", justifyContent: "space-between" }}
-              onClick={() => handlePersonSelect(p)}
-            >
-              <span>{p.name}</span>
-              <span
-                onClick={e => {
-                  e.stopPropagation();
-                  setInfoOpenId(infoOpenId === p.id ? null : p.id);
-                }}
-              >
-                ⓘ
-              </span>
-            </div>
-
-            {infoOpenId === p.id && (
-              <div className="info-box">
-                <div>{p.known_for_department}</div>
-                <div>{p.popularity}</div>
-              </div>
-            )}
+        {!selectedPerson && people.map(person => (
+          <div key={person.id} className="result">
+            <span onClick={() => handlePersonSelect(person)}>
+              {person.name}
+            </span>
           </div>
         ))}
 
-        {results.map(m => (
-          <div key={m.id} className="result">
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>{m.title}</span>
-              <span
-                onClick={e => {
-                  e.stopPropagation();
-                  setInfoOpenId(infoOpenId === m.id ? null : m.id);
-                }}
-              >
-                ⓘ
-              </span>
+        {results.map(movie => (
+          <div key={movie.id} className="result result-movie">
+            <div className="result-left">
+              {movie.poster_path && (
+                <img
+                  src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                  alt={movie.title}
+                  className="result-poster"
+                />
+              )}
+              <span>{movie.title}</span>
             </div>
 
-            {infoOpenId === m.id && (
-              <div className="info-box">
-                <div>{m.release_date?.slice(0, 4) || "N/A"}</div>
-                <div>{m.vote_average || "N/A"}</div>
-                <div>{m.overview?.slice(0, 120) || "No description"}</div>
-              </div>
-            )}
-
-            <button type="button" onClick={() => addMovie(m)}>
+            <button type="button" onClick={() => addMovie(movie)}>
               Add
             </button>
           </div>
