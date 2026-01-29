@@ -110,7 +110,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
         ...movie,
         userRating: "",
         userReview: "",
-        isSaved : false
+        isSaved: false
       }
     ]);
 
@@ -156,8 +156,35 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
             <span onClick={() => handlePersonSelect(person)}>
               {person.name}
             </span>
+
+            <button
+              type="button"
+              onClick={() =>
+                setInfoOpenId(infoOpenId === person.id ? null : person.id)
+              }
+            >
+              Info
+            </button>
+
+            {infoOpenId === person.id && (
+              <div className="person-info">
+                {person.profile_path && (
+                  <img
+                    src={`https://image.tmdb.org/t/p/w92${person.profile_path}`}
+                    alt={person.name}
+                    className="person-photo"
+                  />
+                )}
+
+                <p><strong>Name:</strong> {person.name}</p>
+                <p><strong>Department:</strong> {person.known_for_department}</p>
+
+               
+              </div>
+            )}
           </div>
         ))}
+
 
         {results.map(movie => (
           <div key={movie.id} className="result result-movie">
