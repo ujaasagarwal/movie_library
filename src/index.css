@@ -214,6 +214,16 @@ button:disabled {
   
 
 
+.header::before {
+  content: "";  
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.75)
+  );
+}
 
 .header > * {
   position: relative;
