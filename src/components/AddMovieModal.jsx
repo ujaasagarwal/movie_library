@@ -20,7 +20,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   const [results, setResults] = useState([]);
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);``
   const [error, setError] = useState("");
   const [infoOpenId, setInfoOpenId] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
@@ -140,7 +140,20 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
           </button>
         </form>
 
-        {loading && <p>Loading…</p>}
+        {loading && (
+          <>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="skeleton-result">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div className="skeleton skeleton-poster" />
+                  <div className="skeleton skeleton-title" />
+                </div>
+                <div className="skeleton skeleton-btn" />
+              </div>
+            ))}
+          </>
+        )}
+
         {error && <p>{error}</p>}
 
         {hasSearched && !loading && filter === "movie" && results.length === 0 && !error && (
@@ -156,6 +169,12 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
             <span onClick={() => handlePersonSelect(person)}>
               {person.name}
             </span>
+            <button
+              type="button"
+              onClick={() => handlePersonSelect(person)}
+            >
+              Search
+            </button>
 
             <button
               type="button"
@@ -179,7 +198,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
                 <p><strong>Name:</strong> {person.name}</p>
                 <p><strong>Department:</strong> {person.known_for_department}</p>
 
-               
+
               </div>
             )}
           </div>

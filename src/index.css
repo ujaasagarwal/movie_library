@@ -636,3 +636,121 @@ button:disabled {
   opacity: 1;
   cursor: default;
 }
+
+
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.08) 25%,
+    rgba(255,255,255,0.18) 37%,
+    rgba(255,255,255,0.08) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 10px;
+}
+
+/* Animation */
+@keyframes skeleton-loading {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.skeleton-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  margin-top: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.skeleton-poster {
+  width: 40px;
+  height: 60px;
+}
+
+.skeleton-title {
+  height: 14px;
+  width: 140px;
+  margin-left: 10px;
+}
+
+.skeleton-btn {
+  width: 50px;
+  height: 28px;
+}
+@media (max-width: 480px) {
+
+  .header {
+    height: 100vh;
+    padding: 20px;
+  }
+
+  .header h1 {
+    font-size: 2.4rem;
+    width: auto;
+    white-space: normal;
+    border-right: none;
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+
+  .header p {
+    font-size: 1.1rem;
+  }
+
+  .hero-btn {
+    padding: 12px 22px;
+    font-size: 0.9rem;
+  }
+
+  #add h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .modal-content {
+    width: 92%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .header h1 {
+    font-size: 3.2rem;
+    width: auto;
+    white-space: normal;
+    border-right: none;
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+
+  .header p {
+    font-size: 1.25rem;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  #add h2 {
+    font-size: 2.5rem;
+  }
+
+  .modal-content {
+    width: 85%;
+  }
+}
