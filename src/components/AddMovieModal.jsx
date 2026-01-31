@@ -169,13 +169,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
             <span onClick={() => handlePersonSelect(person)}>
               {person.name}
             </span>
-            <button
-              type="button"
-              onClick={() => handlePersonSelect(person)}
-            >
-              Search
-            </button>
-
+       
             <button
               type="button"
               onClick={() =>
