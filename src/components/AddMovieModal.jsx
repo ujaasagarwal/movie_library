@@ -171,6 +171,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
             </span>
        
             <button
+            className="hero-btn"
               type="button"
               onClick={() =>
                 setInfoOpenId(infoOpenId === person.id ? null : person.id)
@@ -212,7 +213,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
               <span>{movie.title}</span>
             </div>
 
-            <button type="button" onClick={() => addMovie(movie)}>
+            <button className="hero-btn" type="button" onClick={() => addMovie(movie)}>
               Add
             </button>
           </div>
