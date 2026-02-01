@@ -1,17 +1,16 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+html{
+  scroll-behavior: smooth;
+}
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  line-height: 1.5;
-
 }
 #root {
   width: 100%;
   min-height: 100vh;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
 html, body {
   overflow-x: hidden;
   width: 100%;
@@ -19,9 +18,6 @@ html, body {
   margin: 0;
   padding: 0;
 }
-
-
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -32,17 +28,165 @@ body {
 }
 
 
+
+
+.header {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(30, 64, 175, 0.35),
+      rgba(0, 0, 0, 0.9) 70%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.9)
+    ),
+    url("/src/assets/background.png") center / cover no-repeat;
+}
+
+.hero-content {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  z-index: 3;
+  text-align: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+
+
+.hero-content h1 {
+  margin-top: 1.5rem;
+  font-size: 8rem;
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+
+  margin-bottom: 1.2rem;
+  color: #ffffff;
+}
+
+
+.hero-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+
+
+
+.hero-btn {
+  padding: 0.9rem 2.2rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #ffffff;
+  background: linear-gradient(135deg, #4f7cff, #6a9cff);
+  box-shadow: 0 12px 30px rgba(79, 124, 255, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 45px rgba(79, 124, 255, 0.55);
+}
+
+.poster-row {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 100vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  padding: 0;
+
+  overflow: hidden;
+  z-index: 2;
+
+  perspective: 1200px; /* REQUIRED for 3D */
+}
+
+
+.poster-row img {
+  width: 240px;
+  height: 360px;
+
+  object-fit: fill;
+
+  opacity: 0.55;
+
+  transform-style: preserve-3d;
+  transform-origin: center bottom;
+
+  transition:
+    transform 0.45s cubic-bezier(.2,.8,.2,1),
+    opacity 0.45s ease;
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.85);
+}
+
+
+
+
+.poster-row img.active {
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 45px 120px rgba(0,0,0,1);
+}
+
+
+.poster-row img:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.poster-row img:nth-child(1) {
+  transform: translateX(-120px)  scale(0.85);
+}
+
+.poster-row img:nth-child(2) {
+  transform: translateX(-60px)  scale(0.92);
+}
+
+.poster-row img:nth-child(3) {
+  opacity: 1;
+  transform: translateZ(120px) scale(1.15);
+}
+
+.poster-row img:nth-child(4) {
+  transform: translateX(60px) scale(0.92);
+}
+
+.poster-row img:nth-child(5) {
+  transform: translateX(120px)  scale(0.85);
+}
+
+
+
+
 .container {
   
   margin: auto;
-  padding: 20px;
 }
-
 h1 {
   margin-bottom: 15px;
 }
-
-
 button {
   padding: 8px 14px;
   border: none;
@@ -51,48 +195,40 @@ button {
   cursor: pointer;
   border-radius: 4px;
 }
-
 button:hover {
   background: #0056b3;
 }
-
 button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
-
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
-
-
 .card {
   background: white;
   border: 1px solid #ddd;
   padding: 12px;
   border-radius: 6px;
+  margin-bottom: 20px;
+  margin-left: 20px;
 }
-
 .card img {
   width: 100%;
   border-radius: 4px;
 }
-
 .card h3 {
   font-size: 16px;
   margin: 10px 0;
 }
-
 .card input {
   width: 60px;
   padding: 6px;
   margin-bottom: 8px;
 }
-
 .card textarea {
   width: 100%;
   padding: 6px;
@@ -102,99 +238,10 @@ button:disabled {
 
 
 
-.header {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-
-  background-image: url("./assets/background.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
-  overflow: hidden;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-    
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-
-.header h1 {
-  font-family: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid white;
-  font-size: 5.5rem;
-  color:red;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
-
-  
-  width: 0;
-
-  animation:
-    typing 3s steps(52, end) forwards,
-    blink 0.75s step-end infinite,
-    hideCursor 0.1s forwards;
-
-  animation-delay:
-    0s,
-    0s,
-    3s; 
-}
-
-@keyframes typing {
-  from { width: 0 }
-  to { width: 52ch; }
-}
-
-@keyframes blink {
-  50% { border-color: transparent; }
-}
-
-@keyframes hideCursor {
-  to { border-right-color: transparent; }
-}
-
-
-
-
-.header p{
-  font-size: 1.5rem;
-  transition: transform 0.3s ease, color 0.3s ease;
-  font-family: "Helavatica";
-}
-.header p:hover {
-  color: wheat;
-  transform: scale(1.1);
-  
-  
-}
 #add > h2{
   color: white;
 }
-
-
-
-
-
-
-.hero-btn , #add > button{ 
+.hero-btn { 
   margin-top: 30px;
   padding: 14px 28px;
   font-size: 1rem; 
@@ -204,49 +251,7 @@ button:disabled {
   font-weight: 700; 
   cursor: pointer; 
   transition: transform 0.3s ease, box-shadow 0.3s ease; 
-      animation: fadeUp 0.8s ease-out forwards;
-} 
-  
-  .hero-btn:hover { 
-    transform: translateY(-4px); 
-    box-shadow: 0 15px 40px rgba(34, 211, 238, 0.6); }
-
-  
-
-
-.header::before {
-  content: "";  
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.55),
-    rgba(0,0,0,0.75)
-  );
 }
-
-.header > * {
-  position: relative;
-  z-index: 1;
-}
-
-.header::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  backdrop-filter: blur(2px);
-  background: rgba(0,0,0,0.2);
-}
-
-.header::before {
-  background:
-    radial-gradient(
-      ellipse at center,
-      rgba(0,0,0,0.3) 0%,
-      rgba(0,0,0,0.85) 75%
-    );
-}
-
 
 #add{
   display: flex;
@@ -256,22 +261,16 @@ button:disabled {
   margin-top: 2%;
   padding: 2%;
 }
-
 #add > button{
   margin-top: 30px;
 }
-
 #add > h2{
   font-size: 3rem;
 }
-
 .realm{
   color: blue;
   display: inline;
 }
-
-
-
 .mov{
   color : white;
   font-weight: 600;
@@ -279,7 +278,6 @@ button:disabled {
   font-size: 1.5rem;
 
 }
-
 
 .grid {
   display: grid;
@@ -340,6 +338,11 @@ button:disabled {
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 4px;
 }
+.review-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
 
 
 .card input {
@@ -382,7 +385,7 @@ button:disabled {
 
 
 .card:hover {
-  transform: scale(1.05);
+  transform: translateY(-10px);
 }
 
 
@@ -393,7 +396,7 @@ button:disabled {
   overflow-x: hidden;
   margin: 0;
   width: 100%;
-
+  height: 100vh;
 
 }
 
@@ -410,7 +413,7 @@ button:disabled {
   justify-content: center;
   z-index: 9999;
 
-  animation: modalFade 0.3s ease forwards;
+  animation: modalFade 0.5s ease forwards;
 }
 
 
@@ -438,26 +441,26 @@ button:disabled {
 
 .modal-content > button:first-child {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 8px;
+  right: 9px;
+ 
+  width: 32px;
+  height: 32px;
 
-  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
   border: none;
   color: #fff;
 
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 1rem;
+  font-size: 18px;
+  line-height: 1;
+
   cursor: pointer;
-
-  transition: transform 0.25s ease, background 0.25s ease;
 }
 
-.modal-content > button:first-child:hover {
-  transform: rotate(90deg) scale(1.1);
-  background: rgba(255, 255, 255, 0.35);
-}
 
 
 .modal-content form {
@@ -508,10 +511,6 @@ button:disabled {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.modal-content button[type="submit"]:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(99, 102, 241, 0.6);
-}
 
 .modal-content button:disabled {
   opacity: 0.6;
@@ -581,7 +580,7 @@ button:disabled {
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(#6366f1, #22d3ee);
+  background: black;
   border-radius: 10px;
 }
 .pa{
@@ -619,23 +618,8 @@ button:disabled {
   color: white;
   font-weight: 700;
   cursor: pointer;
-
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.save-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
-}
-
-
-.card input:disabled,
-.card textarea:disabled {
-  background: rgba(255, 255, 255, 0.85);
-  color: #000;
-  opacity: 1;
-  cursor: default;
-}
 
 
 
@@ -682,6 +666,22 @@ button:disabled {
   width: 50px;
   height: 28px;
 }
+
+.add-movie-btn {
+  border-radius: 5px;
+  padding: 8px 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+
+}
+
+.add-btn:hover {
+  background: #1e40af;
+}
+
 @media (max-width: 480px) {
 
   .header {
@@ -689,13 +689,6 @@ button:disabled {
     padding: 20px;
   }
 
-  .header h1 {
-    font-size: 2.4rem;
-    width: auto;
-    white-space: normal;
-    border-right: none;
-    animation: fadeUp 0.8s ease-out forwards;
-  }
 
   .header p {
     font-size: 1.1rem;

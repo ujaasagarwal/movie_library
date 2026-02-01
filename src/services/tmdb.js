@@ -1,6 +1,6 @@
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
-
+  
 export async function searchMovie(query) {
   const url =
     `${BASE_URL}/search/movie` +

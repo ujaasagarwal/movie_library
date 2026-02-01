@@ -20,9 +20,9 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   const [results, setResults] = useState([]);
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
-  const [loading, setLoading] = useState(false);``
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [infoOpenId, setInfoOpenId] = useState(null);
+
   const [hasSearched, setHasSearched] = useState(false);
 
   const requestIdRef = useRef(0);
@@ -38,7 +38,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
     setResults([]);
     setPeople([]);
     setSelectedPerson(null);
-    setInfoOpenId(null);
+
     setHasSearched(false);
 
     try {
@@ -76,7 +76,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
     setResults([]);
     setError("");
     setSelectedPerson(person);
-    setInfoOpenId(null);
+
     setHasSearched(false);
 
     try {
@@ -165,40 +165,27 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
         )}
 
         {!selectedPerson && people.map(person => (
-          <div key={person.id} className="result">
-            <span onClick={() => handlePersonSelect(person)}>
-              {person.name}
-            </span>
-       
+          <div key={person.id} className="result result-movie">
+            <div className="result-left">
+              {person.profile_path && (
+                <img
+                  src={`https://image.tmdb.org/t/p/w92${person.profile_path}`}
+                  alt={person.name}
+                  className="result-poster"
+                />
+              )}
+              <span>{person.name}</span>
+            </div>
+
             <button
-            className="hero-btn"
+              className="add-movie-btn"
               type="button"
-              onClick={() =>
-                setInfoOpenId(infoOpenId === person.id ? null : person.id)
-              }
+              onClick={() => handlePersonSelect(person)}
             >
-              Info
+              Search
             </button>
-
-            {infoOpenId === person.id && (
-              <div className="person-info">
-                {person.profile_path && (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w92${person.profile_path}`}
-                    alt={person.name}
-                    className="person-photo"
-                  />
-                )}
-
-                <p><strong>Name:</strong> {person.name}</p>
-                <p><strong>Department:</strong> {person.known_for_department}</p>
-
-
-              </div>
-            )}
           </div>
         ))}
-
 
         {results.map(movie => (
           <div key={movie.id} className="result result-movie">
@@ -213,7 +200,11 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
               <span>{movie.title}</span>
             </div>
 
-            <button className="hero-btn" type="button" onClick={() => addMovie(movie)}>
+            <button
+              className="add-movie-btn"
+              type="button"
+              onClick={() => addMovie(movie)}
+            >
               Add
             </button>
           </div>
