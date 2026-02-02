@@ -4,7 +4,7 @@ export default function MovieCard({ movie, setMovies }) {
 
   function handleDelete() {
     setMovies(prev =>
-      prev.filter(m => m.id !== modie.id)
+      prev.filter(m => m.id !== movie.id)
     );
   }
   function handleEdit() {
