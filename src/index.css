@@ -34,27 +34,36 @@ body {
   position: relative;
   min-height: 100vh;
   width: 100%;
+
+  display: grid;
+  grid-template-rows:
+    minmax(120px, 1fr)
+    auto
+    minmax(420px, auto);
+
   overflow: hidden;
 
   background:
     radial-gradient(
-      circle at center,
-      rgba(30, 64, 175, 0.35),
-      rgba(0, 0, 0, 0.9) 70%
+      1200px 600px at 50% 25%,
+      rgba(99, 102, 241, 0.25),
+      transparent 60%
     ),
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.9)
+      rgba(2, 6, 23, 0.65),
+      rgba(2, 6, 23, 0.95)
     ),
     url("/src/assets/background.png") center / cover no-repeat;
 }
 
+
+
 .hero-content {
-  position: absolute;
-  top: 18%;
-  left: 50%;
-  transform: translateX(-50%);
+  grid-row: 2;
+  align-self: start;
+  margin-top: 1vh;
+  justify-self: center;
 
   z-index: 3;
   text-align: center;
@@ -64,8 +73,9 @@ body {
 
 
 
+
 .hero-content h1 {
-  margin-top: 1.5rem;
+  margin-top: 0;
   font-size: 8rem;
   line-height: 1.08;
   font-weight: 700;
@@ -104,22 +114,22 @@ body {
 }
 
 .poster-row {
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  width: 100vw;
+  grid-row: 3;
 
   display: flex;
   justify-content: center;
   align-items: flex-end;
-
-  padding: 0;
-
+  padding-top: 100px ;
+  
+  width: 100%;
   overflow: hidden;
+
+  padding-bottom: 40px;
   z-index: 2;
 
-  perspective: 1200px; /* REQUIRED for 3D */
+  perspective: 1200px;
 }
+
 
 
 .poster-row img {
@@ -166,7 +176,7 @@ body {
 
 .poster-row img:nth-child(3) {
   opacity: 1;
-  transform: translateZ(120px) scale(1.15);
+  transform: translateZ(120px) scale(1.05);
 }
 
 .poster-row img:nth-child(4) {
@@ -209,31 +219,53 @@ button:disabled {
   margin-top: 20px;
 }
 .card {
-  background: white;
+  background: #ffffff;
   border: 1px solid #ddd;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 20px;
+
+  padding: 20px;               
+  border-radius: 12px;         
+
+  margin-bottom: 32px;
   margin-left: 20px;
+
+  min-height: 520px;             
+
+  
 }
 .card img {
   width: 100%;
-  border-radius: 4px;
+  height: 320px;               
+  object-fit: cover;
+  border-radius: 10px;
+
+  margin-bottom: 14px;
 }
 .card h3 {
-  font-size: 16px;
-  margin: 10px 0;
+  font-size: 1.2rem;             
+  margin: 12px 0 8px;
 }
+
+.card p {
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
 .card input {
-  width: 60px;
-  padding: 6px;
-  margin-bottom: 8px;
+  width: 80px;                   
+  padding: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
 }
+
 .card textarea {
   width: 100%;
-  padding: 6px;
-  margin-top: 6px;
+  min-height: 100px;            
+  padding: 10px;
+  margin-top: 8px;
   resize: vertical;
+
+  font-size: 0.9rem;
+  border-radius: 8px;
 }
 
 
@@ -682,68 +714,45 @@ button:disabled {
   background: #1e40af;
 }
 
-@media (max-width: 480px) {
-
-  .header {
-    height: 100vh;
-    padding: 20px;
-  }
-
-
-  .header p {
-    font-size: 1.1rem;
-  }
-
-  .hero-btn {
-    padding: 12px 22px;
-    font-size: 0.9rem;
-  }
-
-  #add h2 {
-    font-size: 2rem;
-    text-align: center;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .card {
-    padding: 14px;
-    border-radius: 16px;
-  }
-
-  .modal-content {
-    width: 92%;
-    padding: 20px;
-  }
-}
 
 @media (max-width: 768px) {
 
-  .header h1 {
-    font-size: 3.2rem;
-    width: auto;
-    white-space: normal;
-    border-right: none;
-    animation: fadeUp 0.8s ease-out forwards;
+  .hero-content h1 {
+    font-size: clamp(4rem, 7vw, 5.5rem);
   }
 
-  .header p {
-    font-size: 1.25rem;
+  .poster-row img {
+    width: 180px;
+    height: 270px;
+  }
+
+  .poster-row {
+    bottom: 32px;
+  }
+
+  .poster-row img:nth-child(1),
+  .poster-row img:nth-child(5) {
+    transform: scale(0.9);
+  }
+
+  .poster-row img:nth-child(3) {
+    transform: scale(1.05);
   }
 
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
+  }
+}
+
+
+@media (min-width: 1400px) {
+
+  .hero-content h1 {
+    font-size: 8.5rem;
   }
 
-  #add h2 {
-    font-size: 2.5rem;
-  }
-
-  .modal-content {
-    width: 85%;
+  .poster-row img {
+    width: 280px;
+    height: 420px;
   }
 }
