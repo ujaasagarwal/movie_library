@@ -177,7 +177,11 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   return (
     <div className="modal">
       <div className="modal-content">
-        <button onClick={closeModal}>✕</button>
+
+        <button className="modal-close-btn" onClick={closeModal}>
+          ✕
+        </button>
+
 
         <form onSubmit={handleSearch}>
           <input
@@ -205,8 +209,8 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
           </select>
 
           {searchType === "movie" && (
-            <button 
-            className = "filter-btn" type="button" onClick={() => setShowFilters(f => !f)}>
+            <button
+              className="filter-btn" type="button" onClick={() => setShowFilters(f => !f)}>
               Filter by ▾
             </button>
           )}
