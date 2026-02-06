@@ -1,26 +1,19 @@
-
 export default function MovieCard({ movie, setMovies }) {
 
-
   function handleDelete() {
-    setMovies(prev =>
-      prev.filter(m => m.id !== movie.id)
-    );
+    setMovies(prev => prev.filter(m => m.id !== movie.id));
   }
+
   function handleEdit() {
     setMovies(prev =>
       prev.map(m =>
-        m.id === movie.id
-          ? { ...m, isSaved: false }
-          : m
+        m.id === movie.id ? { ...m, isSaved: false } : m
       )
     );
   }
 
-
   function handleReviewChange(e) {
     if (movie.isSaved) return;
-
     const value = e.target.value;
     setMovies(prev =>
       prev.map(m =>
@@ -32,85 +25,70 @@ export default function MovieCard({ movie, setMovies }) {
   function handleSave() {
     setMovies(prev =>
       prev.map(m =>
-        m.id === movie.id
-          ? { ...m, isSaved: true }
-          : m
+        m.id === movie.id ? { ...m, isSaved: true } : m
       )
     );
   }
 
   return (
     <div className="card">
-      {movie.poster_path && (
+      {movie.poster_path ? (
         <img
-          src={`https://image.tmdb.org/t/p/w185${movie.poster_path}`}
+          src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
           alt={movie.title}
         />
+      ) : (
+        <div className="poster-placeholder">No Poster</div>
       )}
 
       <h3>{movie.title}</h3>
-      <p>TMDB Rating: {movie.vote_average}</p>
+      <p>TMDB Rating: {movie.vote_average ?? "N/A"}</p>
 
       <p className="label">Your Rating</p>
 
-      {[1, 2, 3, 4, 5].map((star) => (
+      {[1, 2, 3, 4, 5].map(star => (
         <span
           key={star}
           onClick={() => {
             if (movie.isSaved) return;
-
             setMovies(prev =>
               prev.map(m =>
-                m.id === movie.id
-                  ? { ...m, userRating: star }
-                  : m
+                m.id === movie.id ? { ...m, userRating: star } : m
               )
             );
           }}
           style={{
             cursor: movie.isSaved ? "default" : "pointer",
             fontSize: "20px",
-            color: star <= movie.userRating ? "gold" : "grey",
-            pointerEvents: movie.isSaved ? "none" : "auto"
+            color: star <= movie.userRating ? "gold" : "grey"
           }}
         >
-          ★  
+          ★
         </span>
       ))}
 
-
-
-
-
       <p className="label">Your Review</p>
-      {movie.isSaved ?
-        (<p className="review-text">
+
+      {movie.isSaved ? (
+        <p className="review-text">
           {movie.userReview || "No review given"}
-        </p>) :
+        </p>
+      ) : (
         <textarea
           value={movie.userReview}
           onChange={handleReviewChange}
-          disabled={movie.isSaved}
           placeholder="Write your review"
-        />}
+        />
+      )}
 
       {!movie.isSaved ? (
-        <button className="save-btn" onClick={handleSave}>
-          ✓ Save
-        </button>
+        <button className="save-btn" onClick={handleSave}>✓ Save</button>
       ) : (
         <>
           <p className="saved-text">Saved ✓</p>
           <button className="save-btn" onClick={handleEdit}>Edit</button>
-
           <button className="save-btn" onClick={handleDelete}>Delete</button>
-
-
-
-
         </>
-
-
       )}
     </div>
   );
