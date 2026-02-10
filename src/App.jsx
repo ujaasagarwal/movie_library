@@ -9,9 +9,9 @@ export default function App() {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
-    const savedOnly = movies.filter(m => m.isSaved);
-    localStorage.setItem("movies", JSON.stringify(savedOnly));
+    localStorage.setItem("movies", JSON.stringify(movies));
   }, [movies]);
 
   return (
