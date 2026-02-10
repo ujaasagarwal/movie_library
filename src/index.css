@@ -1101,3 +1101,15 @@ img {
   box-shadow: none;
   color: black;
 }
+
+.dropdown-input,
+.filter-dropdown select {
+  color: #fff;             
+  background-color: #111;  
+}
+
+.dropdown-input option,
+.filter-dropdown option {
+  background: #111;
+  color: #fff;
+}
