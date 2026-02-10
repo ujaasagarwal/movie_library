@@ -248,7 +248,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
             </div>
           )}
 
-          <button type="submit" disabled={loading}>
+          <button className="add-btn" type="submit" disabled={loading}>
             {loading ? "Searching…" : "Search"}
           </button>
         </form>
