@@ -11,6 +11,19 @@ export default function MovieCard({ movie, setMovies }) {
       )
     );
   }
+  function handleRatingChange(e) {
+  if (movie.isSaved) return;
+
+  const value = e.target.value;
+  if (value === "" || /^(10|[1-9])$/.test(value)) {
+    setMovies(prev =>
+      prev.map(m =>
+        m.id === movie.id ? { ...m, userRating: value } : m
+      )
+    );
+  }
+}
+
 
   function handleReviewChange(e) {
     if (movie.isSaved) return;
@@ -43,29 +56,20 @@ export default function MovieCard({ movie, setMovies }) {
 
       <h3>{movie.title}</h3>
       <p>TMDB Rating: {movie.vote_average ?? "N/A"}</p>
+<p className="label">Your Rating (1–10)</p>
 
-      <p className="label">Your Rating</p>
+{movie.isSaved ? (
+  <p>{movie.userRating || "No rating"}</p>
+) : (
+  <input
+    type="text"
+    value={movie.userRating || ""}
+    onChange={handleRatingChange}
+    placeholder="1–10"
+    maxLength={2}
+  />
+)}
 
-      {[1, 2, 3, 4, 5].map(star => (
-        <span
-          key={star}
-          onClick={() => {
-            if (movie.isSaved) return;
-            setMovies(prev =>
-              prev.map(m =>
-                m.id === movie.id ? { ...m, userRating: star } : m
-              )
-            );
-          }}
-          style={{
-            cursor: movie.isSaved ? "default" : "pointer",
-            fontSize: "20px",
-            color: star <= movie.userRating ? "gold" : "grey"
-          }}
-        >
-          ★
-        </span>
-      ))}
 
       <p className="label">Your Review</p>
 
