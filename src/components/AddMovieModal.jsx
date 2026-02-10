@@ -32,14 +32,16 @@ function applyFilters(movies, { genre, genreMode, year, yearMode }) {
   });
 }
 
+
 export default function AddMovieModal({ movies, setMovies, closeModal }) {
   const [query, setQuery] = useState("");
   const [searchType, setSearchType] = useState("movie");
-  const [open, setOpen] = useState(false);
 
   const [results, setResults] = useState([]);
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
+
+  const [selected, setSelected] = useState([]); 
 
   const [genre, setGenre] = useState("");
   const [genreMode, setGenreMode] = useState("include");
@@ -53,13 +55,6 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   const pageRef = useRef(1);
   const requestIdRef = useRef(0);
   const hasMoreRef = useRef(true);
-
-  useEffect(() => {
-  const close = () => setOpen(false);
-  document.addEventListener("click", close);
-
-  return () => document.removeEventListener("click", close);
-}, []);
 
 
   async function fetchMovies({ reset = false } = {}) {
@@ -89,9 +84,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
         { genre, genreMode, year, yearMode }
       );
 
-      if (newResults.length === 0) {
-        hasMoreRef.current = false;
-      }
+      if (newResults.length === 0) hasMoreRef.current = false;
 
       setResults(prev =>
         reset ? newResults : dedupeById([...prev, ...newResults])
@@ -105,10 +98,12 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
 
   async function handleSearch(e) {
     e.preventDefault();
+
     setError("");
     setResults([]);
     setPeople([]);
     setSelectedPerson(null);
+    setSelected([]);
 
     pageRef.current = 1;
     hasMoreRef.current = true;
@@ -124,6 +119,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
       try {
         setLoading(true);
         const data = await searchPerson(query);
+
         setPeople(
           (data?.results || []).filter(p =>
             searchType === "actor"
@@ -143,6 +139,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
     setLoading(true);
     setResults([]);
     setSelectedPerson(person);
+    setSelected([]);
 
     try {
       const credits = await getPersonMovies(person.id);
@@ -169,28 +166,51 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
     }
   }
 
+  function toggleSelect(movie) {
+    setSelected(prev =>
+      prev.includes(movie.id)
+        ? prev.filter(id => id !== movie.id)
+        : [...prev, movie.id]
+    );
+  }
+
+  function selectAll() {
+    setSelected(results.map(m => m.id));
+  }
+
+  function clearSelection() {
+    setSelected([]);
+  }
+
+  function addSelected() {
+    const toAdd = results.filter(m => selected.includes(m.id));
+
+    setMovies(prev => [
+      ...prev,
+      ...toAdd
+        .filter(m => !prev.some(p => p.id === m.id))
+        .map(m => ({
+          ...m,
+          userRating: "",
+          userReview: "",
+          isSaved: false
+        }))
+    ]);
+
+    closeModal();
+  }
+
   function loadMore() {
     pageRef.current += 1;
     fetchMovies();
   }
 
-  function addMovie(movie) {
-    if (movies.some(m => m.id === movie.id)) return;
-    setMovies(prev => [
-      ...prev,
-      { ...movie, userRating: "", userReview: "", isSaved: false }
-    ]);
-    closeModal();
-  }
 
   return (
     <div className="modal">
       <div className="modal-content">
 
-        <button className="modal-close-btn" onClick={closeModal}>
-          ✕
-        </button>
-
+        <button className="modal-close-btn" onClick={closeModal}>✕</button>
 
         <form onSubmit={handleSearch}>
           <input
@@ -210,6 +230,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
               setResults([]);
               setPeople([]);
               setSelectedPerson(null);
+              setSelected([]);
             }}
           >
             <option value="movie">Movie</option>
@@ -219,7 +240,10 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
 
           {searchType === "movie" && (
             <button
-              className="filter-btn" type="button" onClick={() => setShowFilters(f => !f)}>
+              type="button"
+              className="filter-btn"
+              onClick={() => setShowFilters(f => !f)}
+            >
               Filter by ▾
             </button>
           )}
@@ -231,15 +255,13 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
                   <option value="include">Include</option>
                   <option value="exclude">Exclude</option>
                 </select>
+
                 <select value={genre} onChange={e => setGenre(e.target.value)}>
                   <option value="">Any Genre</option>
                   <option value="28">Action</option>
-                  <option value="12">Adventure</option>
-                  <option value="16">Animation</option>
                   <option value="35">Comedy</option>
                   <option value="18">Drama</option>
                   <option value="27">Horror</option>
-                  <option value="10749">Romance</option>
                 </select>
               </div>
 
@@ -248,6 +270,7 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
                   <option value="include">Include</option>
                   <option value="exclude">Exclude</option>
                 </select>
+
                 <input
                   placeholder="Year (YYYY)"
                   value={year}
@@ -261,33 +284,23 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
             {loading ? "Searching…" : "Search"}
           </button>
         </form>
-
-        {loading && (
-          <>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="skeleton-result">
-                <div style={{ display: "flex", gap: "10px" }}>
-                  <div className="skeleton skeleton-poster" />
-                  <div className="skeleton skeleton-title" />
-                </div>
-                <div className="skeleton skeleton-btn" />
-              </div>
-            ))}
-          </>
-        )}
-
         {error && <p>{error}</p>}
-
         {!selectedPerson &&
           people.map(p => (
             <div key={p.id} className="result">
               <span>{p.name}</span>
-              <button onClick={() => handlePersonSelect(p)}>View Movies</button>
+              <button onClick={() => handlePersonSelect(p)}>
+                View Movies
+              </button>
             </div>
           ))}
-
         {results.map(movie => (
-          <div key={movie.id} className="result result-movie">
+          <div
+            key={movie.id}
+            className={`result result-movie ${
+              selected.includes(movie.id) ? "selected" : ""
+            }`}
+          >
             <div className="result-left">
               {movie.poster_path && (
                 <img
@@ -298,20 +311,41 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
               )}
               <span>{movie.title}</span>
             </div>
-            <button onClick={() => addMovie(movie)}>Add</button>
+
+            <input
+              type="checkbox"
+              checked={selected.includes(movie.id)}
+              onChange={() => toggleSelect(movie)}
+            />
           </div>
         ))}
-
-        {searchType === "movie" && results.length > 0 && hasMoreRef.current && (
+        {results.length > 0 && (
+          <>
+            <button onClick={selectAll} className="hero-btn">Select All</button>
+            <button onClick={clearSelection} className="hero-btn">Clear</button>
+          </>
+        )}
+        {selected.length > 0 && (
           <button
             className="hero-btn"
-            onClick={loadMore}
-            disabled={loading}
             style={{ width: "100%", marginTop: "12px" }}
+            onClick={addSelected}
           >
-            Load More
+            Add Selected ({selected.length})
           </button>
         )}
+        {searchType === "movie" &&
+          results.length > 0 &&
+          hasMoreRef.current && (
+            <button
+              className="hero-btn"
+              onClick={loadMore}
+              disabled={loading}
+              style={{ width: "100%", marginTop: "12px" }}
+            >
+              Load More
+            </button>
+          )}
       </div>
     </div>
   );
