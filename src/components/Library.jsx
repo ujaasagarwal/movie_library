@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MovieCard from "./MovieCard";
 
 import img1 from "../assets/image_1.jpg";
@@ -16,6 +16,9 @@ export default function Library({ movies, setMovies, openModal }) {
   const [showSearch, setShowSearch] = useState(false);
   const [showSort, setShowSort] = useState(false);
 
+  const searchRef = useRef(null);
+  const sortRef = useRef(null);
+
   const [sortBy, setSortBy] = useState(() => {
     const saved = localStorage.getItem(SORT_KEY);
     return saved ? JSON.parse(saved).sortBy : "added";
@@ -25,6 +28,23 @@ export default function Library({ movies, setMovies, openModal }) {
     const saved = localStorage.getItem(SORT_KEY);
     return saved ? JSON.parse(saved).sortDir : "desc";
   });
+
+  // ✅ Outside click handler
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearch(false);
+      }
+
+      if (sortRef.current && !sortRef.current.contains(event.target)) {
+        setShowSort(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(
@@ -138,87 +158,89 @@ export default function Library({ movies, setMovies, openModal }) {
           </button>
         </section>
 
-        {movies.length>0 && <div className="library-navbar">
-          <div className="search-bar">
-            <span className="search-icon">🔍</span>
+        {movies.length > 0 && (
+          <div className="library-navbar">
+            <div className="search-bar">
+              <span className="search-icon">🔍</span>
 
-            <input
-              className="search-input"
-              placeholder="Search your library…"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
+              <input
+                className="search-input"
+                placeholder="Search your library…"
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
 
-            <div className="filter-wrapper">
+              <div className="filter-wrapper" ref={searchRef}>
+                <button
+                  className="filter-btn"
+                  onClick={() => setShowSearch(s => !s)}
+                >
+                  Filters ▾
+                </button>
+
+                {showSearch && (
+                  <div className="filter-dropdown">
+                    <select
+                      className="dropdown-input"
+                      value={genreFilter}
+                      onChange={e => setGenreFilter(e.target.value)}
+                    >
+                      <option value="">All Genres</option>
+                      <option value="28">Action</option>
+                      <option value="12">Adventure</option>
+                      <option value="16">Animation</option>
+                      <option value="35">Comedy</option>
+                      <option value="18">Drama</option>
+                      <option value="27">Horror</option>
+                      <option value="10749">Romance</option>
+                    </select>
+
+                    <input
+                      className="dropdown-input"
+                      placeholder="Release year"
+                      value={yearFilter}
+                      onChange={e => setYearFilter(e.target.value)}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="control-wrapper" ref={sortRef}>
               <button
-                className="filter-btn"
-                onClick={() => setShowSearch(s => !s)}
+                className="control-btn"
+                onClick={() => setShowSort(s => !s)}
               >
-                Filters ▾
+                Sort ▾
               </button>
 
-              {showSearch && (
-                <div className="filter-dropdown">
+              {showSort && (
+                <div className="dropdown">
                   <select
                     className="dropdown-input"
-                    value={genreFilter}
-                    onChange={e => setGenreFilter(e.target.value)}
+                    value={sortBy}
+                    onChange={e => setSortBy(e.target.value)}
                   >
-                    <option value="">All Genres</option>
-                    <option value="28">Action</option>
-                    <option value="12">Adventure</option>
-                    <option value="16">Animation</option>
-                    <option value="35">Comedy</option>
-                    <option value="18">Drama</option>
-                    <option value="27">Horror</option>
-                    <option value="10749">Romance</option>
+                    <option value="added">When added</option>
+                    <option value="name">Name</option>
+                    <option value="release">Release Date</option>
+                    <option value="imdb">IMDb Rating</option>
+                    <option value="user">Your Rating</option>
                   </select>
 
-                  <input
-                    className="dropdown-input"
-                    placeholder="Release year"
-                    value={yearFilter}
-                    onChange={e => setYearFilter(e.target.value)}
-                  />
+                  <button
+                    className="control-btn"
+                    onClick={() =>
+                      setSortDir(d => (d === "asc" ? "desc" : "asc"))
+                    }
+                  >
+                    {sortDir === "asc" ? "Ascending ↑" : "Descending ↓"}
+                  </button>
                 </div>
               )}
             </div>
           </div>
-
-          <div className="control-wrapper">
-            <button
-              className="control-btn"
-              onClick={() => setShowSort(s => !s)}
-            >
-              Sort ▾
-            </button>
-
-            {showSort && (
-              <div className="dropdown">
-                <select
-                  className="dropdown-input"
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value)}
-                >
-                  <option value="added">When added</option>
-                  <option value="name">Name</option>
-                  <option value="release">Release Date</option>
-                  <option value="imdb">IMDb Rating</option>
-                  <option value="user">Your Rating</option>
-                </select>
-
-                <button
-                  className="control-btn"
-                  onClick={() =>
-                    setSortDir(d => (d === "asc" ? "desc" : "asc"))
-                  }
-                >
-                  {sortDir === "asc" ? "Ascending ↑" : "Descending ↓"}
-                </button>
-              </div>
-            )}
-          </div>
-        </div>}
+        )}
 
         <div className="grid">
           {visibleMovies.map(movie => (

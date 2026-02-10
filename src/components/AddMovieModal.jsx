@@ -35,6 +35,7 @@ function applyFilters(movies, { genre, genreMode, year, yearMode }) {
 export default function AddMovieModal({ movies, setMovies, closeModal }) {
   const [query, setQuery] = useState("");
   const [searchType, setSearchType] = useState("movie");
+  const [open, setOpen] = useState(false);
 
   const [results, setResults] = useState([]);
   const [people, setPeople] = useState([]);
@@ -52,6 +53,14 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   const pageRef = useRef(1);
   const requestIdRef = useRef(0);
   const hasMoreRef = useRef(true);
+
+  useEffect(() => {
+  const close = () => setOpen(false);
+  document.addEventListener("click", close);
+
+  return () => document.removeEventListener("click", close);
+}, []);
+
 
   async function fetchMovies({ reset = false } = {}) {
     if (loading || !hasMoreRef.current) return;
