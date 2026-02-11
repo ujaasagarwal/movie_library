@@ -29,7 +29,6 @@ export default function Library({ movies, setMovies, openModal }) {
     return saved ? JSON.parse(saved).sortDir : "desc";
   });
 
-  // ✅ Outside click handler
   useEffect(() => {
     function handleClickOutside(event) {
       if (searchRef.current && !searchRef.current.contains(event.target)) {

@@ -174,13 +174,16 @@ export default function AddMovieModal({ movies, setMovies, closeModal }) {
   }
 
   return (
-    <div className="modal">
-      <div className="modal-content">
 
-        <button className="modal-close-btn" onClick={closeModal}>
-          ✕
-        </button>
+  <div className="modal" onClick={closeModal}>
+    <div
+      className="modal-content"
+      onClick={(e) => e.stopPropagation()}
+    >
 
+      <button className="modal-close-btn" onClick={closeModal}>
+        ✕
+      </button>
 
         <form onSubmit={handleSearch}>
           <input
